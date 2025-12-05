@@ -1,0 +1,79 @@
+---
+title: "clustcif-vignette"
+author: "[Nora M. Villanueva](https://noramvillanueva.github.io) & [Marta Sestelo](https://sestelo.github.io)"
+date: "`r Sys.Date()`"
+description: >
+  This vignette describes the usage of the main functions included in the package with a real data set.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{clustcif-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r,  include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+	warning = FALSE,
+	tidy.opts = list(
+		keep.blank.line = TRUE,
+		width.cutoff = 150
+		),
+	#options(width = 150,fig.width=12, fig.height=8),
+	eval = TRUE
+)
+```
+
+> This vignette covers the version 0.0.1 of the clustcif package.
+
+This document explains how to use  [clustcif(https://cran.r-project.org/package=clustcif) R package for clustering cumulative incidence functions. To this end, we illustrate the use of the package using a real data set. 
+
+
+```{r setup}
+library(clustcif)
+library(mstate)
+```
+
+
+# Clustering Cumulative Incidence Functions 
+
+
+```{r}
+data("ebmt2") # loading data
+
+outtest <- clustcif(time = ebmt2$time, status = ebmt2$status, x = NULL,
+                         kvector = NULL,  kbin = 50, nboot = 2,
+                         algorithm = "kmeans", cluster = FALSE)
+```
+
+In the above function it is also included an argument for reducing executing time by means of parallelizing the testing procedure. This is `cluster = TRUE`. Related to this argument,  the number of cores to be used in the parallelized procedure can be specified with the argument `ncores`. By default, `ncores = NULL`, so that the number is equal to the number of cores of the machine - 1.
+
+
+The following piece of code can be executed for obtaining a small summary of the fit
+```{r}
+
+summary(outtest)
+```
+
+As can be seen, the `summary()` function, as well as the `print()` function, can be used to obtained some brief information about the output from `clustcif()`.
+
+
+The graphical representation of the fitted model can be easily obtained using the function `autoplot()`. The plot obtained, specifying the arguments `groups_by_color = FALSE` and `interactive = TRUE`, represents the estimated survival curves for each level of the factor nodes by means of the Kaplan-Meier estimator. As expected, the survival of patients can be influenced by the cellular type of the tumor.
+
+ 
+```{r, out.width= '100%', fig.align = "center"}
+autoplot(outtest , groups_by_colour = FALSE, interactive = TRUE)
+```
+
+
+The assignment of the curves to the three groups can be observed in the following plot simply typing `groups_by_color = TRUE` 
+
+```{r,out.width= '100%', fig.align = "center"}
+autoplot(outtest , groups_by_colour = TRUE, interactive = TRUE)
+```
+
+
+
