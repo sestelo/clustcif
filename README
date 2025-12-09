@@ -1,33 +1,53 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
 <!-- badges: start -->
+
 [![R-CMD-check](https://github.com/sestelo/clustcif/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sestelo/clustcif/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/sestelo/clustcif/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/sestelo/clustcif/actions/workflows/test-coverage.yaml)
-[![Codecov test coverage](https://codecov.io/gh/sestelo/clustcif/branch/main/graph/badge.svg)](https://app.codecov.io/gh/sestelo/clustcif?branch=main)
-[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/](https://cranlogs.r-pkg.org/downloads/total/2023-09-01:2024-09-25/clustcif)
+[![Codecov test
+coverage](https://codecov.io/gh/sestelo/clustcif/branch/main/graph/badge.svg)](https://app.codecov.io/gh/sestelo/clustcif?branch=main)
+[![CRAN
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/](https://cranlogs.r-pkg.org/downloads/total/2023-09-01:2024-09-25/clustcif)
+
 <!-- badges: end -->
 
 # Determining Clusters of Cumulative Incidence Functions in competing risks framework.
 
-clustcif is an R package that implements a method to determine clusters of cumulative incidence functions (CIFs) in a competing risks framework.
-The method is based on the use of the Aalen-Johansen estimator to estimate the CIFs, and the use of a distance measure to quantify the dissimilarity between CIFs. The distance measure used in this package is the L2 distance, but other distance measures can be easily implemented.
+clustcif is an R package that implements a method to determine clusters
+of cumulative incidence functions (CIFs) in a competing risks framework.
+The method is based on the use of the Aalen-Johansen estimator to
+estimate the CIFs, and the use of a distance measure to quantify the
+dissimilarity between CIFs. The distance measure used in this package is
+the L2 distance, but other distance measures can be easily implemented.
 
-The full methodology of the methodology is published in the following paper:
+The full methodology of the methodology is published in the following
+paper:
 
-> Sestelo, M.,  Meira-Machado, L., Villanueva, NM., Roca-Pardinas, J.(2024). _Clustering multiple cumulative incidence functions in competing risks framework_.
-          Biometrical Journal https://doi.org/10.1002/bimj.202400025
+> Sestelo, M., Meira-Machado, L., Villanueva, NM., Roca-Pardinas,
+> J.(2024). *Clustering multiple cumulative incidence functions in
+> competing risks framework*. Biometrical Journal
+> <https://doi.org/10.1002/bimj.202400025>
 
-and is also available in Github [Github repository](https://github.com/sestelo/clustcif/).
+and is also available in Github [Github
+repository](https://github.com/sestelo/clustcif/).
 
 ## Requirements
 
-```
+```         
 library(clustcif)
 ```
 
 ## Sample usage
 
-In the following example, we use ebmt data to showcase the performance of the clustcif taking into
-a count of the presence of several competing risks.
-```
+In the following example, we use ebmt data to showcase the performance
+of the clustcif taking into a count of the presence of several competing
+risks.
+
+```         
 library(mstate) # data from this package
 
 data("ebmt2") # loading data
@@ -59,10 +79,12 @@ figure <- autoplot(outtest) +
 
 If you use clustcif in your research, please cite the following paper:
 
-> Sestelo, M.,  Meira-Machado, L., Villanueva, NM., Roca-Pardinas, J.(2024). _Clustering multiple cumulative incidence functions in competing risks framework_.
-          Biometrical Journal https://doi.org/10.1002/bimj.202400025
+> Sestelo, M., Meira-Machado, L., Villanueva, NM., Roca-Pardinas,
+> J.(2024). *Clustering multiple cumulative incidence functions in
+> competing risks framework*. Biometrical Journal
+> <https://doi.org/10.1002/bimj.202400025>
 
-```
+```         
 @article{ortega2024explainable,
 author = {Sestelo, Meira-Machado, Villanueva and Roca-Pardinas},
 doi = {10.1002/bimj.202400025},
@@ -76,4 +98,3 @@ volume = {66},
 year = {2024}
 }
 ```
-
