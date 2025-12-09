@@ -1,4 +1,4 @@
-# Determining Clusters of Cumulative Incidence Functions in competing risks framework
+# clustcif: Determining Clusters of Cumulative Incidence Functions in Competing Risks Framework
 
 
 
