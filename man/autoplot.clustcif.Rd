@@ -53,7 +53,7 @@ data("ebmt2")
 
 # Testing the number of groups
 outtest <- clustcif(time = ebmt2$time, status = ebmt2$status, x = NULL,
-                        kvector = NULL,  kbin = 50, nboot = 50,
+                        kvector = NULL,  kbin = 20, nboot = 1,
                         algorithm = "kmeans", cluster = FALSE)
 autoplot(outtest)
 }

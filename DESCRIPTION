@@ -1,18 +1,17 @@
 Package: clustcif
-Title: Determining Clusters of Cumulative Incidence Functions in Competing Risks Framework. 
+Title: Determining Clusters of Cumulative Incidence Functions in Competing Risks Framework
 Version: 0.0.1
-Date: 2025-09-25
-Authors@R: c(person("Nora", "M. Villanueva",email= "nmvillanueva@uvigo.es", role = c("aut", "cre"),
+Date: 2025-12-09
+Authors@R: c(person("Nora", "M. Villanueva",email= "nmvillanueva@uvigo.gal", role = c("aut", "cph"),
   comment = c(ORCID = "0000-0001-8085-2745")),
-  person("Marta", "Sestelo",email= "sestelo@uvigo.es", role = "aut", comment = c(ORCID = "0000-0003-4284-6509")))
+  person("Marta", "Sestelo",email= "sestelo@uvigo.gal", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0003-4284-6509")))
 Maintainer: Marta Sestelo <sestelo@uvigo.gal>
-Description:  This package provides a method for determining clusters of cumulative incidence functions 
-          with an automatic selection of their number based on k-means or k-medians algorithms. 
-          The selection of the optimal number is provided by bootstrap methods. 
-    bootstrap methods. 
-    Implemented methodology in:  Sestelo, M.,  Meira-Machado, L., Villanueva, NM.,
-    Roca-Pardinas, J.(2024). Clustering multiple cumulative incidence functions in competing risks framework. 
-          Biometrical Journal. <doi:10.1002/bimj.202400025>.
+Description: This package provides a method for determining clusters of cumulative incidence
+    functions with automatic selection of their number based on k-means or k-medians algorithms.
+    The optimal number of clusters is selected using bootstrap methods.
+    Implemented methodology described in: Sestelo, M., Meira-Machado, L., Villanueva, N. M.,
+    Roca-Pardinas, J. (2024). Clustering multiple cumulative incidence functions in competing
+    risks framework. Biometrical Journal. <https://doi.org/10.1002/bimj.202400025>.
 License: MIT + file LICENSE
 BugReports: https://github.com/sestelo/clustcif/issues
 Encoding: UTF-8

@@ -65,7 +65,7 @@
 #'
 #'# Testing the number of groups
 #' outtest <- clustcif(time = ebmt2$time, status = ebmt2$status, x = NULL,
-#'                         kvector = NULL,  kbin = 50, nboot = 200,
+#'                         kvector = NULL,  kbin = 20, nboot = 1,
 #'                         algorithm = "kmeans", cluster = FALSE)
 #' summary(outtest)
 #'
@@ -88,7 +88,7 @@
 clustcif <- function(time, status = NULL, x, max_time = NULL, labels = NULL,
                             kvector = NULL, kbin = 50, weights = NULL,
                             nboot = 100, algorithm = 'kmeans', alpha = 0.05,
-                            cluster = FALSE, ncores = NULL, seed = NULL,
+                            cluster = TRUE, ncores = NULL, seed = NULL,
                             multiple = FALSE, multiple.method = 'holm'){
 
 

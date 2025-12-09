@@ -1,5 +1,5 @@
 ---
-title: "clustcif-vignette"
+title: "A vignette for the clustcif package"
 author: "[Nora M. Villanueva](https://noramvillanueva.github.io) & [Marta Sestelo](https://sestelo.github.io)"
 date: "`r Sys.Date()`"
 description: >
@@ -54,7 +54,6 @@ In the above function it is also included an argument for reducing executing tim
 
 The following piece of code can be executed for obtaining a small summary of the fit
 ```{r}
-
 summary(outtest)
 ```
 
@@ -65,14 +64,16 @@ The graphical representation of the fitted model can be easily obtained using th
 
  
 ```{r, out.width= '100%', fig.align = "center"}
-autoplot(outtest , groups_by_colour = FALSE, interactive = TRUE)
+autoplot(outtest , groups_by_colour = FALSE, interactive = FALSE)
+p1 <- autoplot(outtest , groups_by_colour = FALSE, interactive = TRUE)
 ```
 
 
 The assignment of the curves to the three groups can be observed in the following plot simply typing `groups_by_color = TRUE` 
 
 ```{r,out.width= '100%', fig.align = "center"}
-autoplot(outtest , groups_by_colour = TRUE, interactive = TRUE)
+autoplot(outtest , groups_by_colour = TRUE, interactive = FALSE)
+p2 <- autoplot(outtest , groups_by_colour = TRUE, interactive = TRUE)
 ```
 
 
