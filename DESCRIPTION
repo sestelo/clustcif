@@ -11,7 +11,7 @@ Description: A method for determining clusters of cumulative incidence
     The optimal number of clusters is selected using bootstrap methods.
     Implemented methodology described in: Sestelo, M., Meira-Machado, L., Villanueva, N. M.,
     Roca-Pardinas, J. (2024). Clustering multiple cumulative incidence functions in competing
-    risks framework. Biometrical Journal. <https://doi.org/10.1002/bimj.202300084>.
+    risks framework. Biometrical Journal. <doi:10.1002/bimj.202300084>.
 License: MIT + file LICENSE
 BugReports: https://github.com/sestelo/clustcif/issues
 Encoding: UTF-8
