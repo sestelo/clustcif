@@ -57,7 +57,7 @@ names(table9)[7] <- "Censored" # changed name of the last cause of death
 
 
 # Testing the number of groups
-outtest <- survcifcurves(time = ebmt2$time, status = ebmt2$status, x = NULL,
+outtest <- survcifcurves(time = ebmt2$time, status = ebmt2$status, 
                          kvector = NULL,  kbin = 50, nboot = 100,
                          algorithm = "kmeans", cluster = TRUE)
 
