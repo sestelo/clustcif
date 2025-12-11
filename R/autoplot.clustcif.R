@@ -40,6 +40,7 @@ ggplot2::autoplot
 #' }
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom grDevices colorRampPalette
+#' @importFrom stats setNames
 #' @export
 
 autoplot.clustcif <- function(object = object, groups_by_colour = TRUE,
@@ -47,32 +48,148 @@ autoplot.clustcif <- function(object = object, groups_by_colour = TRUE,
           xlab = "Time", ylab = "Cumulative Incidence Function",
           interactive = FALSE, ...){
 
-
+  censor <- NULL
   x <- object
   y <- c()
   k <- length(unique(x$cluster))
+  if(x$method == "cif"){ k <- k - 1}
 
-   if(k < 3){
-     colgr <- RColorBrewer::brewer.pal(n = 3, name = "Dark2")
-   }else if(k<9){
-     colgr <- RColorBrewer::brewer.pal(n = k, name = "Dark2")
-     }else{
-  colgr <- colorRampPalette(brewer.pal(n = 8, name = "Dark2"))(k)
-     }
+  if(k < 3){
+    colgr <- RColorBrewer::brewer.pal(n = 3, name = "Dark2")
+  }else if(k<9){
+    colgr <- RColorBrewer::brewer.pal(n = k, name = "Dark2")
+  }else{
+    colgr <- colorRampPalette(brewer.pal(n = 8, name = "Dark2"))(k)
+  }
 
-  if(x$method == "cif"){ #interactive TRUE no funciona, ver si meterlo!
+  if(x$method == "survival"){
+
+    if(!isTRUE(centers)){
+
+      names(x$curves$strata) <- x$levels
+      plot1 <- autoplot(x$curves, conf.int = conf.int, censor = censor, xlab = xlab,
+                        ylab = ylab, ...)
+
+      if (isTRUE(groups_by_colour)){
+        plot2 <- plot1 + ggplot2::scale_color_manual(values = colgr[x$cluster])
+        if(isTRUE(interactive)){
+          if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot2)}
+        }else{
+          plot2
+        }
+      }else{
+        if(isTRUE(interactive)){
+          if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot1)}
+        }else{
+          plot1
+        }
+      }
+
+    }else{
+      #names(x$curves$strata) <- x$levels
+
+      data <- data.frame(t = x$centers$time,
+                         surv = x$centers$surv,
+                         cen = factor(unlist(sapply(1:k, function(x, y){rep(x, y[x])},
+                                                    y = x$centers$strata))))
+
+      plot1 <- autoplot(x$curves, conf.int = conf.int, censor = censor, xlab = xlab,
+                        ylab = ylab, ...) + ggplot2::scale_color_manual(values = colgr[x$cluster])
+
+
+      plot2 <- plot1 + ggplot2::geom_step(data = data,
+                                          ggplot2::aes_string(x = "t", y = "surv", group = "cen"), size = 1)
+
+      if(isTRUE(interactive)){
+        if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot2)}
+      }else{
+        plot2
+      }
+
+    }
+
+  }else if(x$method == "regression"){ #method regression
 
     if(isFALSE(centers)){
 
-      #CORREGIR legend
+      data <- x$data
+      data <- data[order(data$f),]
+      data$f <- as.factor(data$f)
+      data$y <- unlist(x$curves)
+      names(data) <- c("x", "y", "levels")
 
-      plot1 <- plot(x$curves, use.ggplot = TRUE, legend = x$levels[-1], ylim =c(0, max(x$curves[,-c(1:2)])))
-      #plot1 <- plot(x$curves, use.ggplot = TRUE,  ylim =c(0, max(x$curves[,-c(1:2)])))
-
-
+      plot1 <- ggplot2::qplot(x, y, data = data, colour = levels, geom = "line")
+      ii <- order(x$levels) # for solving the problem of ggplot legend (alphabetic order)
       if (isTRUE(groups_by_colour)){
+        plot2 <- plot1 + ggplot2::scale_color_manual(values = colgr[x$cluster])
+        if(isTRUE(interactive)){
+          if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot2)}
+        }else{
+          plot2
+        }
+      }else{
+        if(isTRUE(interactive)){
+          if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot1)}
+        }else{
+          plot1
+        }
+      }
+    }else{
 
-        plot2 <- plot1 + ggplot2::scale_color_manual(values = colgr[x$cluster[-1]])
+      data <- x$data
+      data <- data[order(data$f),]
+      data$f <- as.factor(data$f)
+      data$y <- unlist(x$curves)
+      names(data) <- c("x", "y", "levels")
+
+      data2 <- x$data
+      data2$f <- x$levels[x$cluster[data2$f]]
+      data2 <- data2[order(data2$f),]
+      data2$f <- as.factor(data2$f)
+      data2$y <- unlist(x$centers)
+      names(data2) <- c("x", "y", "levels")
+      levels(data2$levels) <- paste(" G", 1:k, sep = "")
+
+      dat <- rbind(data, data2)
+
+
+      plot1 <- ggplot2::qplot(x, y, data = dat, colour = levels, geom = "line")
+      ii <- order(x$levels) # for solving the problem of ggplot legend (alphabetic order)
+      plot2 <- plot1 + ggplot2::scale_color_manual(values = c(colgr[x$cluster], rep(1,k)))
+      if(isTRUE(interactive)){
+        if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot2)}
+      }else{
+        plot2
+      }
+
+    }
+
+  }else{ #method cif
+
+
+    if(isFALSE(centers)){
+
+
+      if(conf.int == FALSE){
+        conf.type = "none"
+      }else{
+        conf.type = "log"
+      }
+      plot1 <- plot(x$curves, use.ggplot = TRUE, legend = x$levels,
+                    ylim =c(0, max(x$curves[,-c(1:2)])), conf.type = conf.type)
+
+      cols <- colgr[x$cluster[-1]]
+      names(cols) <- x$levels
+      cols_for_scale <- setNames(unname(cols), as.character(seq_along(cols)))
+      if (isTRUE(groups_by_colour)){
+        plot2 <- suppressWarnings(plot1 +
+          ggplot2::scale_color_manual(
+            values = cols_for_scale,
+            breaks = as.character(seq_along(cols)),  # "1","2",... que usa plot1
+            labels = names(cols),                    # "Relapse","GvHD",...
+            name = "state"                         # título en la leyenda
+          ) +
+          ggplot2::guides(linetype = "none"))
         if(isTRUE(interactive)){
           if (requireNamespace("plotly", quietly=TRUE)) {plotly::ggplotly(plot2)}
         }else{
@@ -90,7 +207,7 @@ autoplot.clustcif <- function(object = object, groups_by_colour = TRUE,
 
     }else{
 
-     # FALTA
+      # FALTA
       # data <- data.frame(t = x$centers$time,
       #                    surv = x$centers$surv,
       #                    cen = factor(unlist(sapply(1:k, function(x, y){rep(x, y[x])},
@@ -111,7 +228,7 @@ autoplot.clustcif <- function(object = object, groups_by_colour = TRUE,
 
     }
 
- }
+  }
 
 }
 

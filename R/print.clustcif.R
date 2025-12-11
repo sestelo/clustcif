@@ -1,7 +1,7 @@
 #' @export
-print.clustcurves <- function(x = model, ...) {
+print.clustcif <- function(x = model, ...) {
 
-  if (inherits(x, "clustcurves")) {
+  if (inherits(x, "clustcif")) {
     model <- x
     cat("\nCall: ","\n")
     print(model$call)

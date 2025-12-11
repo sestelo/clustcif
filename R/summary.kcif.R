@@ -35,7 +35,7 @@
 
 
 
-summary.kcurves <- function(object, ...){
+summary.kcif <- function(object, ...){
   cat("\nCall: ","\n")
   print(object$call)
   cat("\nClustering curves in ", length(unique(object$cluster)),

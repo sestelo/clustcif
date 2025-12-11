@@ -12,7 +12,6 @@ kcif(
   labels = NULL,
   k,
   kbin = 50,
-  weights = NULL,
   algorithm = "kmeans",
   seed = NULL
 )
@@ -20,23 +19,29 @@ kcif(
 \arguments{
 \item{time}{Survival time.}
 
-\item{status}{Censoring indicator of the survival
-time of the process; 0 if the total time is censored and 1 otherwise.}
+\item{status}{Event type indicator. Each value corresponds to the cause of the event.
+A value of \code{0} indicates that the observation is censored (i.e., still
+alive or event–free at the end of follow-up), and positive integers
+(\code{1, 2, ...}) represent different event types (causes of failure).}
 
 \item{x}{Categorical variable indicating the population to which
 the observations belongs.}
 
-\item{max_time}{TODO}
+\item{max_time}{Maximum time horizon used to compute the
+cumulative incidence functions. If \code{NULL}, the maximum observed time is used.}
 
-\item{labels}{TODO}
+\item{labels}{A character vector providing the labels for the event types encoded in
+\code{status}, including the label for censored observations. The vector may
+have the same length as \code{status}, in which case it will be interpreted
+as an observation-level vector and internally converted to unique event labels.
+The number of distinct labels must match the number of event
+categories present in \code{status}.}
 
 \item{k}{An integer specifying the number of groups of curves to be
 performed.}
 
 \item{kbin}{Size of the grid over which the cumulative incidence functions
 are to be estimated.}
-
-\item{weights}{TODO}
 
 \item{algorithm}{A character string specifying which clustering algorithm is used,
 i.e., k-means(\code{"kmeans"}) or k-medians (\code{"kmedians"}).}

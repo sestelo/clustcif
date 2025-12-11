@@ -18,32 +18,45 @@ clustcif(
   alpha = 0.05,
   cluster = TRUE,
   ncores = NULL,
-  seed = NULL,
-  multiple = FALSE,
-  multiple.method = "holm"
+  seed = NULL
 )
 }
 \arguments{
 \item{time}{A numeric vector containing the follow up time.}
 
-\item{status}{A numeric vector containing a censoring indicator of the time of the process; \code{"0"} if the total time is censored (or the individual is alive),
-\code{">0"} if different causes of death are observed (1,2,3,...).}
+\item{status}{Event type indicator. Each value corresponds to the cause of the event.
+A value of \code{0} indicates that the observation is censored (i.e., still
+alive or event–free at the end of follow-up), and positive integers
+(\code{1, 2, ...}) represent different event types (causes of failure).}
 
 \item{x}{Categorical variable indicating the population to which
 the observations belongs.}
 
-\item{max_time}{TODO}
+\item{max_time}{Maximum time horizon used to compute the
+cumulative incidence functions. If \code{NULL}, the maximum observed time is used.}
 
-\item{labels}{A categorical variable indicating the different causes of death, i.e.,
-the competing risks.}
+\item{labels}{A character vector providing the labels for the event types encoded in
+\code{status}, including the label for censored observations. The vector may
+have the same length as \code{status}, in which case it will be interpreted
+as an observation-level vector and internally converted to unique event labels.
+The number of distinct labels must match the number of event
+categories present in \code{status}.}
 
 \item{kvector}{A vector specifying the number of groups of curves to be
 checking.}
 
-\item{kbin}{Size of the grid over which the survival functions
+\item{kbin}{Size of the grid over which the cumulative incidence functions
 are to be estimated.}
 
-\item{weights}{NULL}
+\item{weights}{Type of weighting to use when computing the test statistic.
+Options are:
+\itemize{
+\item{\code{NULL} (default): equal weights at all time points.}
+\item{\code{"KM"}: Kaplan–Meier–based weights, smoothed and rescaled,
+giving more weight to early times.}
+\item{\code{"var"}: variance-based weights, inversely proportional to
+CIF standard errors, giving more weight to precise estimates.}
+}}
 
 \item{nboot}{Number of bootstrap repeats.}
 
@@ -66,11 +79,6 @@ in the parallelized procedure. If \code{NULL} (default), the number of cores
 to be used is equal to the number of cores of the machine - 1.}
 
 \item{seed}{Seed to be used in the procedure.}
-
-\item{multiple}{A logical value. If  \code{TRUE} (not default), the resulted
-pvalues are adjusted by using one of several methods for multiple comparisons.}
-
-\item{multiple.method}{Correction method. See Details.}
 }
 \value{
 A list containing the following items:
@@ -87,15 +95,6 @@ which each curve is allocated.}
 Function for grouping cumulative incidence curves (CIF) based on
 the k-means or k-medians algorithm. It returns the optimal number of
 clusters and the assignment to the cluster which they belong to.
-}
-\details{
-The adjustment methods include the Bonferroni correction ("bonferroni")
-in which the p-values are multiplied by the number of comparisons.
-Less conservative corrections are also included by Holm (1979) ('holm'),
-Hochberg (1988) ('hochberg'), Hommel (1988) ('hommel'),
-Benjamini & Hochberg (1995) ('BH' or its alias 'fdr'), and
-Benjamini & Yekutieli (2001) ('BY'), respectively.
-A pass-through option ('none') is also included.
 }
 \examples{
 \dontrun{

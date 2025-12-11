@@ -38,7 +38,7 @@ summary.clustcif <- function(object, ...){
   cat("\nClustering curves in ", object$num_groups,
       " groups", "\n", sep = "")
   if(object$method == "cif"){
-    cat("\nNumber of observations: ",length(object$centers$time))
+    cat("\nNumber of observations: ",length(object$data$time))
   }else{
     cat("\nNumber of observations: ",dim(object$data)[1])
   }
@@ -46,7 +46,7 @@ summary.clustcif <- function(object, ...){
   cat("\nFactor's levels:\n")
   print(object$levels, ...)
   cat("\nClustering factor's levels:\n")
-  print(object$cluster-1, ...)
+  print((object$cluster - 1)[-1], ...)
   cat("\nTesting procedure:\n")
   print(object$table, ...)
 

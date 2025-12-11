@@ -4,18 +4,33 @@
 #'        the k-means or k-medians algorithm. It returns the optimal number of
 #'        clusters and the assignment to the cluster which they belong to.
 #' @param time A numeric vector containing the follow up time.
-#' @param status A numeric vector containing a censoring indicator of the time of the process; \code{"0"} if the total time is censored (or the individual is alive),
-#' \code{">0"} if different causes of death are observed (1,2,3,...).
+#' @param status Event type indicator. Each value corresponds to the cause of the event.
+#' A value of \code{0} indicates that the observation is censored (i.e., still
+#' alive or event–free at the end of follow-up), and positive integers
+#' (\code{1, 2, ...}) represent different event types (causes of failure).
 #' @param x Categorical variable indicating the population to which
 #' the observations belongs.
-#' @param max_time TODO
-#' @param labels A categorical variable indicating the different causes of death, i.e.,
-#'        the competing risks.
+#' @param max_time Maximum time horizon used to compute the
+#' cumulative incidence functions. If \code{NULL}, the maximum observed time is used.
+#' @param labels A character vector providing the labels for the event types encoded in
+#' \code{status}, including the label for censored observations. The vector may
+#' have the same length as \code{status}, in which case it will be interpreted
+#' as an observation-level vector and internally converted to unique event labels.
+#' The number of distinct labels must match the number of event
+#' categories present in \code{status}.
 #' @param kvector A vector specifying the number of groups of curves to be
 #'  checking.
-#' @param kbin Size of the grid over which the survival functions
+#' @param kbin Size of the grid over which the cumulative incidence functions
 #' are to be estimated.
-#' @param weights NULL
+#' @param weights Type of weighting to use when computing the test statistic.
+#' Options are:
+#' \itemize{
+#'   \item{\code{NULL} (default): equal weights at all time points.}
+#'   \item{\code{"KM"}: Kaplan–Meier–based weights, smoothed and rescaled,
+#'   giving more weight to early times.}
+#'   \item{\code{"var"}: variance-based weights, inversely proportional to
+#'   CIF standard errors, giving more weight to precise estimates.}
+#' }
 #' @param nboot Number of bootstrap repeats.
 #' @param algorithm A character string specifying which clustering algorithm is used,
 #'  i.e., k-means(\code{"kmeans"}) or k-medians (\code{"kmedians"}).
@@ -32,9 +47,6 @@
 #' in the parallelized procedure. If \code{NULL} (default), the number of cores
 #' to be used is equal to the number of cores of the machine - 1.
 #' @param seed Seed to be used in the procedure.
-#' @param multiple A logical value. If  \code{TRUE} (not default), the resulted
-#' pvalues are adjusted by using one of several methods for multiple comparisons.
-#' @param multiple.method Correction method. See Details.
 #'
 #'@return
 #'A list containing the following items:
@@ -47,13 +59,6 @@
 #'  (mean of the curves pertaining to the same group).}
 #'  \item{curves}{An object containing the fitted curves for each population.}
 #'
-#'@details The adjustment methods include the Bonferroni correction ("bonferroni")
-#' in which the p-values are multiplied by the number of comparisons.
-#' Less conservative corrections are also included by Holm (1979) ('holm'),
-#' Hochberg (1988) ('hochberg'), Hommel (1988) ('hommel'),
-#' Benjamini & Hochberg (1995) ('BH' or its alias 'fdr'), and
-#' Benjamini & Yekutieli (2001) ('BY'), respectively.
-#' A pass-through option ('none') is also included.
 #'
 #'
 #'@author Nora M. Villanueva and Marta Sestelo.
@@ -89,10 +94,10 @@
 clustcif <- function(time, status = NULL, x, max_time = NULL, labels = NULL,
                             kvector = NULL, kbin = 50, weights = NULL,
                             nboot = 100, algorithm = 'kmeans', alpha = 0.05,
-                            cluster = TRUE, ncores = NULL, seed = NULL,
-                            multiple = FALSE, multiple.method = 'holm'){
+                            cluster = TRUE, ncores = NULL, seed = NULL){
 
-
+  multiple = FALSE
+  multiple.method = "holm"
   y <- time
  # weights <- status
   z <- x #esto antes era asi. Lo cambio para meter el argumento labels.
@@ -265,11 +270,13 @@ clustcif <- function(time, status = NULL, x, max_time = NULL, labels = NULL,
     data$status0 <- cluster[status+1] - 1
     h0 <- Cuminc(time = "time", status = "status0", data = data)
     h1 <- Cuminc(time = "time", status = "status", data = data)
-
+    ii <- unique(factor(labels)[status == 0])
+    labs <- setdiff(levels(factor(labels)), ii)
+    aux$levels <- labs
 
   }else{
     k <- paste( ">", k, sep ="")
-    aux$levels <- NA
+    #aux$levels <- NA
     aux$cluster <- NA
     h0 <- NA
 

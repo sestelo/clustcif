@@ -5,7 +5,7 @@ print.kcif <- function(x = model, ...) {
     model <- x
     cat("\nCall: ","\n")
     print(model$call)
-    cat("\nClustering curves in ", length(unique(model$cluster)),
+    cat("\nClustering curves in ", length(unique(model$cluster)) - 1,
         " groups", "\n", sep = "")
     if(model$method == "survival"){
       cat("\nNumber of observations: ",length(model$centers$time))
