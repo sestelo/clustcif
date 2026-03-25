@@ -1,8 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 # clustcif: Determining Clusters of Cumulative Incidence Functions in Competing Risks Framework
 
